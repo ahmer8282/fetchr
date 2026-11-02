@@ -6,12 +6,14 @@ from PyInstaller.utils.hooks import collect_submodules, collect_all
 # Only the Kivy parts Fetchr uses (no camera/video/audio/spelling providers)
 deps = get_deps_minimal(video=None, audio=None, camera=None, spelling=None)
 ff_datas, ff_bins, ff_hidden = collect_all("imageio_ffmpeg")
+# curl_cffi lets yt-dlp look like a real browser (needed for TikTok)
+cc_datas, cc_bins, cc_hidden = collect_all("curl_cffi")
 
 a = Analysis(
     ["main.py"],
-    datas=ff_datas,
-    binaries=ff_bins,
-    hiddenimports=deps["hiddenimports"] + collect_submodules("yt_dlp") + ff_hidden + ["certifi"],
+    datas=ff_datas + cc_datas,
+    binaries=ff_bins + cc_bins,
+    hiddenimports=deps["hiddenimports"] + collect_submodules("yt_dlp") + ff_hidden + cc_hidden + ["certifi", "_cffi_backend"],
     excludes=deps["excludes"],
     hookspath=hookspath(),
     runtime_hooks=runtime_hooks(),
