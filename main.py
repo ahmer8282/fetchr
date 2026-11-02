@@ -6,7 +6,14 @@ Engine: yt-dlp (https://github.com/yt-dlp/yt-dlp)
 import os
 import re
 import shutil
+import sys
 import threading
+
+# The Windows .exe has no console: give Python real (silent) output streams
+# so nothing crashes trying to print.
+for _name in ("stdout", "stderr"):
+    if not hasattr(getattr(sys, _name, None), "write"):
+        setattr(sys, _name, open(os.devnull, "w", encoding="utf-8"))
 
 os.environ.setdefault("KIVY_NO_ARGS", "1")
 
@@ -157,6 +164,22 @@ BoxLayout:
 """
 
 
+class QuietLogger:
+    """Sends yt-dlp's messages nowhere instead of to a console window."""
+
+    def debug(self, msg):
+        pass
+
+    def info(self, msg):
+        pass
+
+    def warning(self, msg):
+        pass
+
+    def error(self, msg):
+        pass
+
+
 def human_bytes(n):
     if not n:
         return ""
@@ -295,6 +318,8 @@ class FetchrApp(App):
             "progress_hooks": [self._hook],
             "quiet": True,
             "no_warnings": True,
+            "noprogress": True,
+            "logger": QuietLogger(),
             "retries": 5,
             "fragment_retries": 5,
             "concurrent_fragment_downloads": 4,
