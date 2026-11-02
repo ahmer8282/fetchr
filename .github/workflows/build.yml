@@ -44,7 +44,25 @@ jobs:
           key: buildozer-v2-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
 
       - name: Build APK
-        run: yes | buildozer android debug
+        shell: bash
+        run: buildozer android debug < <(yes) 2>&1 | tee build.log
+
+      - name: Show Android error
+        if: failure()
+        shell: bash
+        run: |
+          echo "===== Lines mentioning errors ====="
+          grep -n -E "error:|Error:|ERROR|Traceback|BuildozerException|Command failed" build.log | grep -v "noexcept\|deprecated" | tail -n 40 || true
+          echo
+          echo "===== Last 120 lines ====="
+          tail -n 120 build.log
+
+      - name: Save full Android log
+        if: failure()
+        uses: actions/upload-artifact@v5
+        with:
+          name: android-build-log
+          path: build.log
 
       - uses: actions/upload-artifact@v5
         with:
@@ -70,6 +88,11 @@ jobs:
           pip install -r requirements.txt imageio-ffmpeg pyinstaller
 
       - name: Build EXE
+        # The build server has no graphics card. Kivy's "mock" graphics mode stops it
+        # from opening a blocking error popup while packaging. The finished .exe still
+        # uses normal OpenGL on real PCs.
+        env:
+          KIVY_GL_BACKEND: mock
         run: pyinstaller fetchr-windows.spec --noconfirm --clean
 
       - uses: actions/upload-artifact@v5
