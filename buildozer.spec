@@ -7,7 +7,9 @@ source.include_exts = py,png,jpg,kv,xml
 source.exclude_dirs = bin,.buildozer,.github,build,dist
 version = 1.0.0
 
-requirements = python3,kivy,yt-dlp,certifi,openssl,pyjnius,android
+# charset_normalizer is pinned to its pure-Python wheel: python-for-android picks the
+# Android-only wheel from PyPI otherwise, then fails to install it.
+requirements = python3,kivy,yt-dlp,certifi,openssl,pyjnius,android,charset_normalizer@https://files.pythonhosted.org/packages/fc/ad/d07d7862a62ffa6d79d68074d14823243dd235a77c45262acbf6adeb28bf/charset_normalizer-3.5.2-py3-none-any.whl
 
 orientation = portrait
 fullscreen = 0
