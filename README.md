@@ -7,7 +7,8 @@ One codebase runs on **Android** and **Windows/Mac/Linux**. Powered by [yt-dlp](
 - Paste a link, or **share straight from Instagram / TikTok / YouTube → Fetchr** (Android)
 - Quality: Best, 1080p, 720p, 480p, 360p, Audio only
 - Live progress, speed and time left
-- Saves to `Download/Fetchr` on the phone (shows in Gallery) or `Downloads\Fetchr` on PC
+- Saves to `Download/Fetchr` on the phone (shows in Gallery) or your `Downloads` folder on PC — change it any time with **Change**
+- **Stop** cancels a download (and deletes the unfinished file); **×** clears the link box
 
 ## Get the apps from GitHub (no coding needed)
 1. Create a new repository on GitHub and upload **all** these files, including the hidden `.github` folder
